@@ -16,9 +16,9 @@ type CurrentTrack struct {
 	SecondCounter int
 }
 
-func TrackLoop(ctx context.Context, wg *sync.WaitGroup, track *CurrentTrack, db *data.DBModule) {
+func TrackLoop(ctx context.Context, wg *sync.WaitGroup, track *CurrentTrack) {
 	defer wg.Done()
-
+	db := data.DBModule{}
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
@@ -30,7 +30,10 @@ func TrackLoop(ctx context.Context, wg *sync.WaitGroup, track *CurrentTrack, db 
 			if track.AppName != "" {
 				currentStart := track.currentStart
 				duration := time.Since(currentStart)
-				db.RecordUsage(track.AppName, track.WindowName, duration, time.Now())
+				err := db.RecordUsage(track.AppName, track.WindowName, duration, time.Now())
+				if err != nil {
+					log.Printf("[Shutdown] Error saving final record for %s: %v", track.AppName, err)
+				}
 				log.Printf("[Shutdown] Final save for %s. Duration: %v", track.AppName, duration)
 			}
 			log.Println("Tracking goroutine stopped cleanly.")

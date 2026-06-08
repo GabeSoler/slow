@@ -7,9 +7,6 @@ import (
 	"time"
 
 	"github.com/gabesoler/slow/data"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 // TestRunDimmerSolo lets you execute the GLFW overlay entirely on its own
@@ -18,22 +15,7 @@ func TestRunTrakLoop(t *testing.T) {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
-	// 1. Initialize GORM DB connection
-	db, err := gorm.Open(sqlite.Open("apps.db"), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info), // Optional: logs SQL queries
-	})
-	if err != nil {
-		t.Log("failed to connect database:")
-		t.Log(err)
-	}
-
-	// 2. Initialize your db.AppUse module
-	appMod, err := data.NewDBModule(db)
-	if err != nil {
-		t.Log("failed to initialize module:")
-		t.Log(err)
-	}
-
+	data.SetUpDatabase()
 	// 2. Use a WaitGroup so main doesn't exit before the goroutine finishes saving
 	var wg sync.WaitGroup
 
@@ -41,7 +23,7 @@ func TestRunTrakLoop(t *testing.T) {
 
 	// 3. Spin it off as a goroutine
 	wg.Add(1)
-	go TrackLoop(ctx, &wg, globalTracker, appMod)
+	go TrackLoop(ctx, &wg, globalTracker)
 
 	// Let it run for 5 seconds to simulate your app doing work...
 	time.Sleep(5 * time.Second)
