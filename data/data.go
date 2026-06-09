@@ -100,16 +100,19 @@ func GetCurrentRecords() []WindowSummary {
 	return currentRecords
 }
 
-func SetUpDatabase() error {
+func SetUpDatabase() (DBModule, error) {
 	// 1. Initialize GORM DB connection
 	db, err := gorm.Open(sqlite.Open("apps.db"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info), // Optional: logs SQL queries
 	})
+	if err != nil {
+		log.Fatalf("failed to connect database: %v", err)
+	}
 
 	// 2. Initialize your db.AppUse module
-	NewDBModule(db)
+	dbModule, err := NewDBModule(db)
 	if err != nil {
 		log.Fatalf("failed to initialize module: %v", err)
 	}
-	return err
+	return *dbModule, err
 }

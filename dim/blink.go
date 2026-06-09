@@ -1,4 +1,3 @@
-// Package dim provides a function to dim the screen on macOS by simulating key presses.
 package dim
 
 import (
@@ -6,11 +5,12 @@ import (
 	"os/exec"
 )
 
-func Dim() error {
+func Blink() error {
 	// We pass each '-e' flag and its script snippet as separate arguments to osascript
 	cmd := exec.Command("osascript",
 		"-e", "tell application \"System Events\"",
 		"-e", "repeat 10 times", "-e", "key code 145", "-e", "end repeat",
+		"-e", "repeat 10 times", "-e", "key code 144", "-e", "end repeat",
 		"-e", "end tell",
 	)
 

@@ -18,7 +18,11 @@ type CurrentTrack struct {
 
 func TrackLoop(ctx context.Context, wg *sync.WaitGroup, track *CurrentTrack) {
 	defer wg.Done()
-	db := data.DBModule{}
+	db, err := data.SetUpDatabase()
+	if err != nil {
+		log.Fatalf("Failed to set up database: %v", err)
+	}
+
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 

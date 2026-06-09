@@ -1,6 +1,7 @@
 /*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
+	Package cmd handles all the action of Slow, the CLI tool to slow down your computer.
 
+Copyright © 2026 Gabriel Soler <gsoler@gmail.com>
 */
 package cmd
 
@@ -10,18 +11,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "slow",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "an app to help you slow down",
+	Long: `Slow runs a loop cycle that triggers a blink on the brightness.
+	The default is 60 minutes and ending at 8 cycles, witha  full dim of the screen.
+	it also tracks app usage, so you can see what have you been doing.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -47,5 +43,3 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-
