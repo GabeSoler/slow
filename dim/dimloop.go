@@ -6,10 +6,10 @@ import (
 	"time"
 )
 
-func DimLoop(ctx context.Context, wg *sync.WaitGroup, cycle int, totalCycles int) {
-	ticker := time.NewTicker(time.Duration(cycle) * time.Minute)
+func DimLoop(ctx context.Context, wg *sync.WaitGroup, cycles int, duration int) {
+	ticker := time.NewTicker(time.Duration(duration) * time.Minute)
 	defer ticker.Stop()
-	total := time.Duration(totalCycles) * time.Minute
+	total := time.Duration(cycles) * time.Minute
 	start := time.Now()
 	for {
 		select {

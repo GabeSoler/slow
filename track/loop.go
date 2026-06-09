@@ -16,13 +16,13 @@ type CurrentTrack struct {
 	SecondCounter int
 }
 
-func TrackLoop(ctx context.Context, wg *sync.WaitGroup, track *CurrentTrack) {
+func TrackLoop(ctx context.Context, wg *sync.WaitGroup) {
 	defer wg.Done()
 	db, err := data.SetUpDatabase()
 	if err != nil {
 		log.Fatalf("Failed to set up database: %v", err)
 	}
-
+	var track CurrentTrack
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 

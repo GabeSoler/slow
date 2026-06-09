@@ -1,14 +1,21 @@
-/*
-	Package cmd handles all the action of Slow, the CLI tool to slow down your computer.
-
-Copyright © 2026 Gabriel Soler <gsoler@gmail.com>
-*/
+// Package cmd handles all the action of Slow, the CLI tool to slow down your computer.
 package cmd
 
 import (
+	"context"
+	"log"
 	"os"
+	"sync"
 
+	"github.com/gabesoler/slow/dim"
+	"github.com/gabesoler/slow/track"
 	"github.com/spf13/cobra"
+)
+
+// Define variables to hold flag values
+var (
+	duration int
+	cycles   int
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -17,10 +24,29 @@ var rootCmd = &cobra.Command{
 	Short: "an app to help you slow down",
 	Long: `Slow runs a loop cycle that triggers a blink on the brightness.
 	The default is 60 minutes and ending at 8 cycles, witha  full dim of the screen.
-	it also tracks app usage, so you can see what have you been doing.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	it also tracks app usage, so you can see what have you been doing.
+`,
+	Run: func(cmd *cobra.Command, args []string) {
+		// 1. Initialize your context, cancel, and WaitGroup
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel() // Ensure resources are cleaned up when Run exits
+
+		var wg sync.WaitGroup
+
+		// 2. Fetch the flag values (already parsed by Cobra at this point)
+		// You can use the bound variables directly, or use cmd.Flags().Get...
+		log.Printf("Running with duration: %d mins, cycles: %d\n", duration, cycles)
+
+		// 3. Call your two imported functions
+		// Increments the WaitGroup for the goroutines inside your functions
+		wg.Add(2)
+
+		go dim.DimLoop(ctx, &wg, cycles, duration)
+		go track.TrackLoop(ctx, &wg)
+
+		// 4. Wait for the background processes to finish
+		wg.Wait()
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -33,13 +59,7 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.slow.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// Define your two custom flags and bind them to the variables
+	rootCmd.Flags().IntVarP(&duration, "duration", "d", 60, "Duration of the loop cycle in minutes")
+	rootCmd.Flags().IntVarP(&cycles, "cycles", "c", 8, "Number of cycles before ending")
 }
