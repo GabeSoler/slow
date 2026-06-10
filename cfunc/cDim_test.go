@@ -19,4 +19,12 @@ func TestSetScreenBrightness(t *testing.T) {
 
 	// Small pause to let the hardware state update
 	time.Sleep(200 * time.Millisecond)
+
+	// 3. Blink function
+	t.Log("Testing: Blink function..")
+	duration := time.Duration(500 * time.Millisecond)
+	Blink(duration, 0.3)
+
+	// Small pause to let the hardware state update
+	time.Sleep(200 * time.Millisecond)
 }
