@@ -14,7 +14,7 @@ func TestRunDimmLoop(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go DimLoop(ctx, &wg, 1, 2)
+	go DimLoop(ctx, &wg, 3, 1)
 	time.Sleep(3 * time.Minute)
 	cancel()
 	wg.Done()

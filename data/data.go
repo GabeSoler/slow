@@ -19,7 +19,7 @@ type AppUse struct {
 	WindowName string        `gorm:"not null;index"`
 	Duration   time.Duration `gorm:"type:bigint;not null"` // Stored as nanoseconds (int64)
 	Date       time.Time     `gorm:"type:date;not null;index"`
-	CreatedAt  time.Time
+	CreatedAt  time.Time     `gorm:"autoCreateTime"`
 }
 
 // DBModule handles the database operations for AppUse.
@@ -83,20 +83,25 @@ type WindowSummary struct {
 	AppName    string
 	WindowName string
 	TotalUse   time.Duration
+	AverageUse time.Duration
+	Switches   int
 }
 
-var currentRecords []WindowSummary
-
-func (m *DBModule) GetAggretatedTodayUsage() {
+func (m *DBModule) GetAggretatedUsage(daysBack int) []WindowSummary {
 	var currentRecords []WindowSummary
-	m.db.Select("app_name, window_name, SUM(duration) as total_use").
+	dateRef := time.Now().AddDate(0, 0, -daysBack)
+	m.db.Select(`
+		app_name,
+							window_name, 
+							SUM(duration) as total_use,
+							SUM(duration) / COUNT(DISTINCT DATE(date)) as average_use,
+							COUNT(id) as switches
+		`).
 		Table("app_uses").
-		Where("date = ?", time.Now().Format("2006-01-02")). // Filter for today's date
+		Where("date >= ?", dateRef.Format("2006-01-02")). // Filter for today's date
 		Group("app_name, window_name").
+		Order("total_use DESC").
 		Scan(&currentRecords)
-}
-
-func GetCurrentRecords() []WindowSummary {
 	return currentRecords
 }
 

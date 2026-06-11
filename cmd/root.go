@@ -7,6 +7,8 @@ import (
 	"os"
 	"sync"
 
+	_ "net/http/pprof"
+
 	"github.com/gabesoler/slow/dim"
 	"github.com/gabesoler/slow/track"
 	"github.com/spf13/cobra"
@@ -28,10 +30,10 @@ var rootCmd = &cobra.Command{
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		// 1. Initialize your context, cancel, and WaitGroup
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel() // Ensure resources are cleaned up when Run exits
 
 		var wg sync.WaitGroup
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel() // Ensure resources are cleaned up when Run exits
 
 		// 2. Fetch the flag values (already parsed by Cobra at this point)
 		// You can use the bound variables directly, or use cmd.Flags().Get...
@@ -44,7 +46,7 @@ var rootCmd = &cobra.Command{
 		go dim.DimLoop(ctx, &wg, cycles, duration)
 		go track.TrackLoop(ctx, &wg)
 
-		// 4. Wait for the background processes to finish
+		// Wait for the background processes to finish
 		wg.Wait()
 	},
 }
@@ -59,6 +61,10 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.AddCommand(usageCmd)
+	rootCmd.AddCommand(trackCmd)
+	rootCmd.AddCommand(dimCmd)
+
 	// Define your two custom flags and bind them to the variables
 	rootCmd.Flags().IntVarP(&duration, "duration", "d", 60, "Duration of the loop cycle in minutes")
 	rootCmd.Flags().IntVarP(&cycles, "cycles", "c", 8, "Number of cycles before ending")

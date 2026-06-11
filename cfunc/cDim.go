@@ -27,6 +27,17 @@ func Blink(duration time.Duration, decreace float32) {
 	SetScreenBrightness(original)
 }
 
+// BlinkUp hightens the screen by decreace amount and restores it back to its original state
+func BlinkUp(duration time.Duration, decreace float32) {
+	original := GetScreenBrightness()
+
+	SetScreenBrightness(original + decreace)
+
+	time.Sleep(duration)
+
+	SetScreenBrightness(original)
+}
+
 func Dim(decreace float32) {
 	original := GetScreenBrightness()
 	SetScreenBrightness(original - decreace)
