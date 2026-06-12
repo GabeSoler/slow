@@ -30,7 +30,7 @@ brews:
   - name: slow
     # The GitHub repository that acts as your Homebrew tap
     repository:
-      owner: gabrielsoler
+      owner: gabresoler
       name: homebrew-tap
       # If you're using a standard GitHub Action or a personal access token (PAT)
       # with repo write access, GoReleaser will use it to push.

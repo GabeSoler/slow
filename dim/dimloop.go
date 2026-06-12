@@ -8,12 +8,12 @@ import (
 	"github.com/gabesoler/slow/cfunc"
 )
 
-func DimLoop(ctx context.Context, wg *sync.WaitGroup, cycles int, duration int) {
-	ticker := time.NewTicker(time.Duration(duration) * time.Minute)
+func DimLoop(ctx context.Context, wg *sync.WaitGroup, cycleMinutes int, durationMinutes float32) {
+	ticker := time.NewTicker(time.Duration(cycleMinutes) * time.Minute)
 	defer ticker.Stop()
-	totalDuration := time.Duration(cycles) * time.Minute
+	totalDuration := time.Duration(durationMinutes) * time.Minute
 	start := time.Now()
-	blinkDuration := time.Duration(200 * time.Millisecond)
+	blinkDuration := time.Duration(300 * time.Millisecond)
 	for {
 		select {
 		case <-ctx.Done():
