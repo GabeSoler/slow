@@ -16,12 +16,16 @@ before:
 builds:
   - main: ./...
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
     goos:
       - darwin
     goarch:
       - arm64
       - amd64
+    ignore:
+      - goos: darwin
+        goarch: arm64
+        goarm: v8.0
 brews:
   - name: slow
     # The GitHub repository that acts as your Homebrew tap
