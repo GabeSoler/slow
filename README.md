@@ -35,11 +35,12 @@ slow
 Imagine you want to work for four hours you can pass:
 
 ```bash
-slow -d 4 -c 30
+slow -d 30 -c 4
 ```
 
-With this configuration your computer will blink up (that's how i called it)
-every 30 minutes until 2 hours, then will blink down.
+With this configuration your computer will blink
+every 30 minutes for 4 cycles.
+Mid way it will increase 20% darkness.
 
 This aims to give you feedback of how much time is passing while working.
 After the desired time, the screen will go darker and you can run the usage

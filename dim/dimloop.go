@@ -24,9 +24,9 @@ func DimLoop(ctx context.Context, wg *sync.WaitGroup, cycles int, duration int) 
 			case timeRef >= totalDuration:
 				cfunc.Dim(.5)
 			case timeRef <= totalDuration/2:
-				cfunc.BlinkUp(blinkDuration, .3)
-			default:
 				cfunc.Blink(blinkDuration, .4)
+			default:
+				cfunc.Blink(blinkDuration, .6)
 			}
 		}
 	}

@@ -14,12 +14,12 @@ import (
 
 // AppUse represents the database model for tracking app usage.
 type AppUse struct {
-	ID         uint          `gorm:"primaryKey"`
-	AppName    string        `gorm:"not null;index"`
-	WindowName string        `gorm:"not null;index"`
-	Duration   time.Duration `gorm:"type:bigint;not null"` // Stored as nanoseconds (int64)
-	Date       time.Time     `gorm:"type:date;not null;index"`
-	CreatedAt  time.Time     `gorm:"autoCreateTime"`
+	ID         uint      `gorm:"primaryKey"`
+	AppName    string    `gorm:"not null;index"`
+	WindowName string    `gorm:"not null;index"`
+	Duration   float64   `gorm:"type:bigint;not null"` // Stored as nanoseconds (int64)
+	Date       time.Time `gorm:"type:date;not null;index"`
+	CreatedAt  time.Time `gorm:"autoCreateTime"`
 }
 
 // DBModule handles the database operations for AppUse.
@@ -39,7 +39,7 @@ func NewDBModule(db *gorm.DB) (*DBModule, error) {
 }
 
 // RecordUsage inserts a new app usage entry into the database.
-func (m *DBModule) RecordUsage(appName string, appWindow string, duration time.Duration, date time.Time) error {
+func (m *DBModule) RecordUsage(appName string, appWindow string, duration float64, date time.Time) error {
 	// Truncate the date to remove time components (keeping it strictly a "Date")
 	cleanDate := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
 
@@ -82,8 +82,8 @@ func (m *DBModule) GetTodayUsage() ([]AppUse, error) {
 type WindowSummary struct {
 	AppName    string
 	WindowName string
-	TotalUse   time.Duration
-	AverageUse time.Duration
+	TotalUse   float64
+	AverageUse float64
 	Switches   int
 }
 
@@ -93,8 +93,8 @@ func (m *DBModule) GetAggretatedUsage(daysBack int) []WindowSummary {
 	m.db.Select(`
 		app_name,
 							window_name, 
-							SUM(duration) as total_use,
-							SUM(duration) / COUNT(DISTINCT DATE(date)) as average_use,
+							SUM(CAST(duration AS DECIMAL(18,2))) as total_use,
+							SUM(CAST(duration AS DECIMAL(18,2))) / COUNT(DISTINCT DATE(date)) as average_use,
 							COUNT(id) as switches
 		`).
 		Table("app_uses").
@@ -107,7 +107,7 @@ func (m *DBModule) GetAggretatedUsage(daysBack int) []WindowSummary {
 
 func SetUpDatabase() (DBModule, error) {
 	// 1. Initialize GORM DB connection
-	db, err := gorm.Open(sqlite.Open("apps.db"), &gorm.Config{
+	db, err := gorm.Open(sqlite.Open("slow.db"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info), // Optional: logs SQL queries
 	})
 	if err != nil {

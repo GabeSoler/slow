@@ -18,6 +18,7 @@ var usageCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("usage called")
 		data.DisplayUsage(days)
+
 		log.Println("Display done")
 	},
 }
@@ -25,5 +26,5 @@ var usageCmd = &cobra.Command{
 func init() {
 	//	rootCmd.AddCommand(usageCmd)
 
-	usageCmd.Flags().IntVarP(&days, "back", "b", 7, "Days back to display Usage")
+	usageCmd.Flags().IntVarP(&days, "back", "b", 0, "Days back to display Usage")
 }

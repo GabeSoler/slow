@@ -1,10 +1,10 @@
 package data
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -26,18 +26,21 @@ func DisplayUsage(daysBack int) {
 		if len(displayWindow) > maxWindowLen {
 			displayWindow = displayWindow[:maxWindowLen-3] + "..."
 		}
+		var totalStr string
+		var avgStr string
 
-		totalMinutes := int(item.TotalUse.Minutes())
-		avgMinutes := int(item.AverageUse.Minutes())
+		if item.TotalUse > 60.0 {
+			totalMinutes := item.TotalUse / 60
+			avgMinutes := item.AverageUse / 60
 
-		totalStr := strconv.Itoa(totalMinutes) + "m"
-		avgStr := strconv.Itoa(avgMinutes) + "m"
+			totalStr = fmt.Sprintf("%.1f m", totalMinutes)
+			avgStr = fmt.Sprintf("%.1f m", avgMinutes)
 
-		if item.TotalUse < time.Minute {
-			totalStr = item.TotalUse.Round(time.Second).String()
-		}
-		if item.AverageUse < time.Minute {
-			avgStr = item.AverageUse.Round(time.Second).String()
+		} else {
+
+			totalStr = fmt.Sprintf("%.1f s", item.TotalUse)
+			avgStr = fmt.Sprintf("%.1f s", item.AverageUse)
+
 		}
 		row := []string{
 			item.AppName,

@@ -22,7 +22,12 @@ func TrackLoop(ctx context.Context, wg *sync.WaitGroup) {
 	if err != nil {
 		log.Fatalf("Failed to set up database: %v", err)
 	}
-	var track CurrentTrack
+	track := CurrentTrack{
+		AppName:      "None",
+		WindowName:   "None",
+		currentStart: time.Now(),
+	}
+
 	ticker := time.NewTicker(200 * time.Millisecond)
 	defer ticker.Stop()
 
@@ -33,7 +38,7 @@ func TrackLoop(ctx context.Context, wg *sync.WaitGroup) {
 		case <-ctx.Done():
 			if track.AppName != "" {
 				currentStart := track.currentStart
-				duration := time.Since(currentStart)
+				duration := time.Since(currentStart).Seconds()
 				err := db.RecordUsage(track.AppName, track.WindowName, duration, time.Now())
 				if err != nil {
 					log.Printf("[Shutdown] Error saving final record for %s: %v", track.AppName, err)
@@ -47,15 +52,20 @@ func TrackLoop(ctx context.Context, wg *sync.WaitGroup) {
 			app, window := cfunc.GetActiveWindow()
 
 			if track.AppName != app || track.WindowName != window {
-
-				duration := time.Since(track.currentStart)
-				db.RecordUsage(track.AppName,
-					track.WindowName,
-					duration,
-					time.Now())
-				log.Printf("Switched app! Recorded %s for %v",
-					track.AppName, duration)
+				if track.AppName != "" {
+					// Storing new window
+					duration := time.Since(track.currentStart).Seconds()
+					db.RecordUsage(track.AppName,
+						track.WindowName,
+						duration,
+						time.Now())
+					log.Printf("Switched app! Recorded %s for %v",
+						track.AppName, duration)
+				}
+				// Reseting track
 				track.currentStart = time.Now()
+				track.AppName = app
+				track.WindowName = window
 			}
 		}
 	}
