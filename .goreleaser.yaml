@@ -44,12 +44,11 @@ homebrew_casks:
     description: "Slow is an app that cares for your mental health as a programmer"
     license: "Apache-2.0"
 
-    custom_block: |
-          post_install do
-            if OS.mac?
-              system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/slow"]
-            end
-          end
+    caveats: |
+      If macOS prevents 'slow' from running because it is unsigned, 
+      you can clear the quarantine flag by running this command:
+
+        xattr -dr com.apple.quarantine $(which slow)
 
 archives:
   - formats: [tar.gz]
