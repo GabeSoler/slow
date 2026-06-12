@@ -43,18 +43,18 @@ homebrew_casks:
     homepage: "https://github.com/gabrielsoler/slow"
     description: "Slow is an app that cares for your mental health as a programmer"
     license: "Apache-2.0"
-
-    hooks:
-      post:
-        # replace foo with the actual binary name
-        install: |
-          if OS.mac?
-            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/slow"]
-          end
-
-    # Since it's Mac-only, ensure Homebrew only allows installation on macOS
-    caveats: |
-      This application is designed specifically to run on macOS systems.
+    binaries:
+      - slow
+    custom_block: |
+      hooks: {
+        post: {
+          install: [
+            {
+              script: "if OS.mac?\n  system_command '/usr/bin/xattr', args: ['-dr', 'com.apple.quarantine', '#{staged_path}/slow']\nend"
+            }
+          ]
+        }
+      }
 
 archives:
   - formats: [tar.gz]
