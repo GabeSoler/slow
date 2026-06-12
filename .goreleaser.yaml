@@ -44,11 +44,11 @@ homebrew_casks:
     description: "Slow is an app that cares for your mental health as a programmer"
     license: "Apache-2.0"
 
-    hooks:
-      post:
-        install: |
-          if OS.mac?
-            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/slow"]
+    custom_block: |
+          post_install do
+            if OS.mac?
+              system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/slow"]
+            end
           end
 
 archives:
