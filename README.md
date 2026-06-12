@@ -21,6 +21,22 @@ Additionally:
 It has two loops to achieve that using go, with minimum impact to
 your machine (8M of RAM)
 
+## Install
+
+```bash
+
+brew tap gabesoler/tap
+```
+
+```bash
+brew trust --cask gabesoler/tap/slow
+```
+
+```bash
+
+brew install --cask slow
+```
+
 ## Use
 
 ### For it to run both loops

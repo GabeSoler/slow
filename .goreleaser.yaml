@@ -45,16 +45,12 @@ homebrew_casks:
     license: "Apache-2.0"
     binaries:
       - slow
-    custom_block: |
-      hooks: {
-        post: {
-          install: [
-            {
-              script: "if OS.mac?\n  system_command '/usr/bin/xattr', args: ['-dr', 'com.apple.quarantine', '#{staged_path}/slow']\nend"
-            }
-          ]
-        }
-      }
+    hooks:
+          post:
+            install: |
+              if OS.mac?
+                system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/slow"]
+              end
 
 archives:
   - formats: [tar.gz]
