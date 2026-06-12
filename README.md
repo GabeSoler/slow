@@ -2,6 +2,8 @@
 
 ## An app that cares for your mental health
 
+- Only for Mac at the moment!
+
 Slow is an app to remind you how much you are using your computer.
 I made it thinking on the mental health problems
 arising with the new AI addictions and psychosis.
@@ -35,6 +37,12 @@ brew trust --cask gabesoler/tap/slow
 ```bash
 
 brew install --cask slow
+```
+
+Strip quarantine
+
+```bash
+xattr -dr com.apple.quarantine $(which slow)
 ```
 
 ## Use
