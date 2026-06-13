@@ -11,8 +11,7 @@ arising with the new AI addictions and psychosis.
 It does something simple:
 
 - Blinks light every cycle (default 60 min)
-- Blinks dark after half the total 21:49
-- After total time (default 8 cycles) makes your screen brightness go dark.
+- After total time (default 8 hours) makes your screen brightness go dark.
 
 Additionally:
 
@@ -20,10 +19,12 @@ Additionally:
 - it keeps it in an SQLite locally
 - You can ask for usage
 
-It has two loops to achieve that using go, with minimum impact to
-your machine (8M of RAM)
+It has two loops to achieve that using Go, with minimum impact to
+your machine (8M of RAM the whole app)
 
 ## Install
+
+Connect first with my tap repository.
 
 ```bash
 

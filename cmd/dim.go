@@ -18,6 +18,6 @@ var dimCmd = &cobra.Command{
 
 func init() {
 	// Define your two custom flags and bind them to the variables
-	dimCmd.Flags().Float32VarP(&duration, "duration", "d", 1, "Total hours of DimLoop (float32)")
-	dimCmd.Flags().IntVarP(&cycles, "every", "e", 8, "Cycle lenght in minutes (int)")
+	dimCmd.Flags().Float32VarP(&duration, "duration", "d", 8, "Total hours of DimLoop (float32)")
+	dimCmd.Flags().IntVarP(&cycle, "every", "e", 60, "Cycle lenght in minutes (int)")
 }

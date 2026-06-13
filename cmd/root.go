@@ -17,7 +17,7 @@ import (
 // Define variables to hold flag values
 var (
 	duration float32
-	cycles   int
+	cycle    int
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -37,13 +37,13 @@ var rootCmd = &cobra.Command{
 
 		// 2. Fetch the flag values (already parsed by Cobra at this point)
 		// You can use the bound variables directly, or use cmd.Flags().Get...
-		log.Printf("Running with duration: %f mins, cycles: %d\n", duration, cycles)
+		log.Printf("Running with duration: %f mins, cycles: %d\n", duration, cycle)
 
 		// 3. Call your two imported functions
 		// Increments the WaitGroup for the goroutines inside your functions
 		wg.Add(2)
 
-		go dim.DimLoop(ctx, &wg, cycles, duration*60)
+		go dim.DimLoop(ctx, &wg, cycle, duration*60)
 		go track.TrackLoop(ctx, &wg)
 
 		// Wait for the background processes to finish
@@ -66,6 +66,6 @@ func init() {
 	rootCmd.AddCommand(dimCmd)
 
 	// Define your two custom flags and bind them to the variables
-	rootCmd.Flags().Float32VarP(&duration, "duration", "d", 1, "Total hours of DimLoop (float32)")
-	rootCmd.Flags().IntVarP(&cycles, "every", "e", 8, "Cycle lenght in minutes (int)")
+	rootCmd.Flags().Float32VarP(&duration, "duration", "d", 8, "Total hours of DimLoop (float32)")
+	rootCmd.Flags().IntVarP(&cycle, "every", "e", 60, "Cycle lenght in minutes (int)")
 }
