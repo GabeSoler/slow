@@ -30,6 +30,8 @@ your machine (8M of RAM)
 brew tap gabesoler/tap
 ```
 
+Call it with trust, as still a new home brew
+
 ```bash
 brew trust --cask gabesoler/tap/slow
 ```
@@ -37,12 +39,6 @@ brew trust --cask gabesoler/tap/slow
 ```bash
 
 brew install --cask slow
-```
-
-Strip quarantine
-
-```bash
-xattr -dr com.apple.quarantine $(which slow)
 ```
 
 ## Use
@@ -84,23 +80,14 @@ slow usage
 ```
 
 Example
-┌──────────────────┬──────────────────────┬────────────┬─────────┬──────────┐
-│       APP        │        WINDOW        │ TOTAL TIME │ TIME AV │ SWITCHES │
-├──────────────────┼──────────────────────┼────────────┼─────────┼──────────┤
-│ Arc              │                      │ 11m        │ 5m      │ 23       │
-│ Ghostty          │                      │ 7m         │ 3m      │ 21       │
-│ Activity Monitor │                      │ 4m         │ 4m      │ 3        │
-│ ghostty          │ ./slow --duration... │ 16s        │ 16s     │ 1        │
-│ ghostty          │ ./slow               │ 14s        │ 14s     │ 2        │
-│ Arc              │ vi - Find and rep... │ 8s         │ 8s      │ 3        │
-│ TextEdit         │                      │ 5s         │ 5s      │ 1        │
-│ Prime Video      │ Prime Video          │ 5s         │ 5s      │ 1        │
-│ ghostty          │ go run .             │ 3s         │ 3s      │ 1        │
-│ Finder           │                      │ 3s         │ 3s      │ 1        │
-│ Notion           │ Apple                │ 2s         │ 2s      │ 1        │
-└──────────────────┴──────────────────────┴────────────┴─────────┴──────────┘
 
-### To only do app tracking
+|   APP   | WINDOW | TOTAL TIME | TIME AV | SWITCHES |
+|:-------:|:------:|:----------:|:-------:|:--------:|
+| Ghostty |        |   2.1 s    |  2.1 s  |    1     |
+|   Arc   |        |   0.6 s    |  0.6 s  |    1     |
+|  None   |  None  |   0.3 s    |  0.3 s  |    1     |
+
+### Only app tracking
 
 You can also run the tracking loop alone:
 

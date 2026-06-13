@@ -7,16 +7,24 @@ import (
 	"strconv"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/olekukonko/tablewriter/renderer"
 )
 
-func DisplayUsage(daysBack int) {
+func DisplayUsage(daysBack int, md bool) {
 	m, err := SetUpDatabase()
 	if err != nil {
 		log.Fatalf("error Initiatin Db, %v", err)
 	}
 	data := m.GetAggretatedUsage(daysBack)
 
-	table := tablewriter.NewWriter(os.Stdout)
+	var table *tablewriter.Table
+	if md {
+		table = tablewriter.NewTable(os.Stdout,
+			tablewriter.WithRenderer(renderer.NewMarkdown()),
+		)
+	} else {
+		table = tablewriter.NewWriter(os.Stdout)
+	}
 
 	table.Header("App", "Window", "TotalTime", "TimeAv", "Switches")
 
