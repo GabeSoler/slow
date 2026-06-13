@@ -87,6 +87,8 @@ Example
 |   Arc   |        |   0.6 s    |  0.6 s  |    1     |
 |  None   |  None  |   0.3 s    |  0.3 s  |    1     |
 
+You can add the flag --markdown or -m to display as markdown (what I used here)
+
 ### Only app tracking
 
 You can also run the tracking loop alone:
